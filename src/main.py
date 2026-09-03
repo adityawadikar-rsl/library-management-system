@@ -1,9 +1,10 @@
 from models.book import Book
 from models.member import Member
+from models.exceptions import BorrowingLimitError
 from services.library_manager import LibraryManager
 from reports.formatter import generate_inventory_report, generate_financial_report
 
-def main():
+def main() -> None:
     # 1. Initialize the system[cite: 1]
     library = LibraryManager()
 
@@ -69,7 +70,7 @@ def main():
 
             except (ValueError, IndexError):
                 print("\nInvalid selection. Please enter a valid number.")
-            except PermissionError as e:
+            except BorrowingLimitError as e:
                 # Catch fine limits (fines > 250₹)[cite: 3]
                 print(f"\nError: {e}")
 
@@ -108,9 +109,11 @@ def main():
         elif choice == '3':
             # 4. Generate Reports[cite: 1]
             print("\n")
-            print(generate_inventory_report(books_list))
+            inventory_success, inventory_output, inventory_error = generate_inventory_report(books_list)
+            print(inventory_output if inventory_success else inventory_error)
             print("\n")
-            print(generate_financial_report(members_list))
+            financial_success, financial_output, financial_error = generate_financial_report(members_list)
+            print(financial_output if financial_success else financial_error)
 
         elif choice == '4':
             print("\nExiting library system. Goodbye!")
