@@ -1,9 +1,12 @@
 import uuid
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
+from models.exceptions import InvalidMemberError
+
 
 class Member:
-    def __init__(self, name: str, email: str):
+    def __init__(self, name: str, email: str) -> None:
         self.member_id: str = str(uuid.uuid4())
         self.name: str = name
         self.email: str = email
@@ -15,7 +18,9 @@ class Member:
 
     def borrow_book(self, book_id: str) -> None:
         if len(self.borrowed_book_ids) >= 5:
-            raise ValueError(f"Member {self.name} has reached the maximum borrowing limit.")
+            raise InvalidMemberError(
+                f"Member {self.name} has reached the maximum borrowing limit."
+            )
         self.borrowed_book_ids.append(book_id)
 
     def return_book(self, book_id: str) -> None:
@@ -29,7 +34,7 @@ class Member:
     def pay_fine(self, amount: float) -> float:
         """Pays off fines and returns any change if overpaid."""
         if amount >= self.accumulated_fines:
-            change = amount - self.accumulated_fines
+            change: float = amount - self.accumulated_fines
             self.accumulated_fines = 0.0
             return change
         

@@ -11,27 +11,60 @@ The codebase is intentionally separated into distinct architectural layers to he
 
 *   `src/models/`: Contains the data structures (`Book` and `Member`).
 *   `src/services/`: Contains the business logic and state management (`LibraryManager`).
-*   `src/reports/`: Contains functions for formatting output strings.
+*   `src/reports/`: Contains safe, tuple-returning functions for formatting output strings.
 *   `src/main.py`: The interactive command-line interface.
-*   `tests/`: An empty directory waiting for your AI-generated unit tests.
+*   `tests/`: Pytest coverage for services and report formatters.
 
 ```
-library_management_system/
+library_management_system
+├── .github
+│   ├── instructions
+│   │   ├── reports.instructions.md
+│   │   └── services.instructions.md
+│   └── skills
+│       └── book-crud
+│           └── SKILL.md
+├── AGENTS.md
 ├── README.md
 ├── src
 │   ├── main.py
 │   ├── models
 │   │   ├── book.py
-│   │   └── member.py
+│   │   ├── category.py
+│   │   ├── exceptions.py
+│   │   ├── member.py
+│   │   └── publisher.py
+│   ├── reports
+│   │   ├── formatter.py
+│   │   ├── search_formatter.py
+│   │   └── utils.py
 │   └── services
-│       └── library_manager.py
+│       ├── fine_calculator.py
+│       ├── library_manager.py
+│       ├── publisher_repository.py
+│       └── search_service.py
 └── tests
-    └── README.md                         
+    ├── README.md
+    ├── test_category.py
+    ├── test_fine_calculator.py
+    ├── test_formatter.py
+    ├── test_library_manager.py
+    ├── test_publisher_repository.py
+    ├── test_search_formatter.py
+    └── test_search_service.py                        
 ```
+
+The scoped instruction files live under `.github/instructions/`; the reusable CRUD skill lives under `.github/skills/book-curd/`.
 
 ## How to Run
 
 Navigate to the root directory of the project in your terminal and execute the main script using Python:
 
 ```bash
-python src/main.py
+python3 src/main.py
+```
+
+Tests
+```bash
+PYTHONPATH=src python3 -m pytest -q
+```
