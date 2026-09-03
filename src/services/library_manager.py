@@ -1,9 +1,11 @@
-from typing import Dict, List, Optional
+from typing import Dict, List
 from models.book import Book
+from models.exceptions import BorrowingLimitError, InvalidMemberError
 from models.member import Member
 
+
 class LibraryManager:
-    def __init__(self):
+    def __init__(self) -> None:
         # In-memory "databases"
         self.books: Dict[str, Book] = {}
         self.members: Dict[str, Member] = {}
@@ -20,10 +22,10 @@ class LibraryManager:
         book = self.books.get(book_id)
 
         if not member or not book:
-            raise ValueError("Invalid member ID or book ID.")
+            raise InvalidMemberError("Invalid member ID or book ID.")
         
         if member.accumulated_fines > 250:
-            raise PermissionError("Cannot borrow books with outstanding fines over 250₹.")
+            raise BorrowingLimitError("Cannot borrow books with outstanding fines over 250₹.")
 
         book.check_out()
         member.borrow_book(book_id)
@@ -33,7 +35,7 @@ class LibraryManager:
         book = self.books.get(book_id)
 
         if not member or not book:
-            raise ValueError("Invalid member ID or book ID.")
+            raise InvalidMemberError("Invalid member ID or book ID.")
 
         if book.is_overdue():
             # Flat fine for simplicity, but could be calculated by days overdue

@@ -1,15 +1,18 @@
 import uuid
 from datetime import datetime, timedelta
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
+from models.exceptions import InvalidBookError
+
 
 class Book:
-    def __init__(self, title: str, author: str, year_published: int):
+    def __init__(self, title: str, author: str, year_published: int) -> None:
         self.book_id: str = str(uuid.uuid4())
         self.title: str = title
         self.author: str = author
         self.year_published: int = year_published
         self.added_on: str = datetime.now().isoformat()
-        
+
         # State management
         self.is_borrowed: bool = False
         self.due_date: Optional[str] = None
@@ -17,10 +20,10 @@ class Book:
     def check_out(self, loan_days: int = 14) -> None:
         """Marks the book as borrowed and sets a due date."""
         if self.is_borrowed:
-            raise ValueError(f"Book '{self.title}' is already borrowed.")
-        
+            raise InvalidBookError(f"Book '{self.title}' is already borrowed.")
+
         self.is_borrowed = True
-        due = datetime.now() + timedelta(days=loan_days)
+        due: datetime = datetime.now() + timedelta(days=loan_days)
         self.due_date = due.isoformat()
 
     def return_book(self) -> None:
@@ -41,5 +44,5 @@ class Book:
             "author": self.author,
             "year_published": self.year_published,
             "is_borrowed": self.is_borrowed,
-            "due_date": self.due_date
+            "due_date": self.due_date,
         }
