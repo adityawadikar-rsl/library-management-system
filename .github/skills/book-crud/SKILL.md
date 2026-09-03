@@ -1,5 +1,5 @@
 ---
-name: book-curd
+name: book-crud
 description: Scaffold a complete CRUD entity management routine for the library system.
 ---
 
